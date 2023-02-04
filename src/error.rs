@@ -310,6 +310,7 @@ impl Error {
     }
 }
 
+#[cfg(feature = "default-error-impl")]
 impl<T: Display + Send + Sync> From<T> for Error {
     fn from(e: T) -> Self {
         Self {
