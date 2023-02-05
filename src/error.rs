@@ -40,7 +40,7 @@ pub struct ServerError {
     pub message: String,
     /// The source of the error.
     #[serde(skip)]
-    pub source: Option<Arc<dyn Any + Send + Sync>>,
+    pub source: Option<Arc<dyn std::error::Error + Send + Sync>>,
     /// Where the error occurred.
     #[serde(skip_serializing_if = "Vec::is_empty", default)]
     pub locations: Vec<Pos>,
@@ -121,7 +121,7 @@ impl ServerError {
     /// assert!(err.source::<std::io::Error>().is_some());
     /// # });
     /// ```
-    pub fn source<T: Any + Send + Sync>(&self) -> Option<&T> {
+    pub fn source<T: std::error::Error + Send + Sync + 'static>(&self) -> Option<&T> {
         self.source.as_ref().map(|err| err.downcast_ref()).flatten()
     }
 
@@ -256,7 +256,7 @@ pub struct Error {
     pub message: String,
     /// The source of the error.
     #[serde(skip)]
-    pub source: Option<Arc<dyn Any + Send + Sync>>,
+    pub source: Option<Arc<dyn std::error::Error + Send + Sync>>,
     /// Extensions to the error.
     #[serde(skip_serializing_if = "error_extensions_is_empty")]
     pub extensions: Option<ErrorExtensionValues>,
@@ -289,7 +289,7 @@ impl Error {
 
     /// Create an error with a type that implements `Display`, and it will also
     /// set the `source` of the error to this value.
-    pub fn new_with_source(source: impl Display + Send + Sync + 'static) -> Self {
+    pub fn new_with_source(source: impl std::error::Error + Send + Sync + 'static) -> Self {
         Self {
             message: source.to_string(),
             source: Some(Arc::new(source)),
