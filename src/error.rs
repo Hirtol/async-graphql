@@ -18,8 +18,8 @@ pub struct ErrorExtensionValues(BTreeMap<String, Value>);
 
 impl ErrorExtensionValues {
     /// Set an extension value.
-    pub fn set(&mut self, name: impl AsRef<str>, value: impl Into<Value>) {
-        self.0.insert(name.as_ref().to_string(), value.into());
+    pub fn set(&mut self, name: impl Into<String>, value: impl Into<Value>) {
+        self.0.insert(name.into(), value.into());
     }
 
     /// Unset an extension value.
@@ -225,7 +225,7 @@ impl<T: InputType> InputValueError<T> {
     }
 
     /// Set an extension value.
-    pub fn with_extension(mut self, name: impl AsRef<str>, value: impl Into<Value>) -> Self {
+    pub fn with_extension(mut self, name: impl Into<String>, value: impl Into<Value>) -> Self {
         self.extensions
             .get_or_insert_with(ErrorExtensionValues::default)
             .set(name, value);
