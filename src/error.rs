@@ -321,6 +321,17 @@ impl<T: Display + Send + Sync> From<T> for Error {
     }
 }
 
+#[cfg(not(feature = "default-error-impl"))]
+impl<T: Into<String>> From<T> for Error {
+    fn from(value: T) -> Self {
+        Self {
+            message: value.into(),
+            source: None,
+            extensions: None,
+        }
+    }
+}
+
 /// An alias for `Result<T, Error>`.
 pub type Result<T, E = Error> = std::result::Result<T, E>;
 

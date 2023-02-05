@@ -373,12 +373,14 @@ where
     };
 
     let before = match before {
-        Some(before) => Some(Cursor::decode_cursor(&before)?),
+        Some(before) => {
+            Some(Cursor::decode_cursor(&before).map_err(|e| Error::from(e.to_string()))?)
+        }
         None => None,
     };
 
     let after = match after {
-        Some(after) => Some(Cursor::decode_cursor(&after)?),
+        Some(after) => Some(Cursor::decode_cursor(&after).map_err(|e| Error::from(e.to_string()))?),
         None => None,
     };
 
