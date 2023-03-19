@@ -1,5 +1,4 @@
 use std::{
-    any::Any,
     collections::BTreeMap,
     fmt::{self, Debug, Display, Formatter},
     marker::PhantomData,
@@ -310,18 +309,6 @@ impl Error {
     }
 }
 
-#[cfg(feature = "default-error-impl")]
-impl<T: Display + Send + Sync> From<T> for Error {
-    fn from(e: T) -> Self {
-        Self {
-            message: e.to_string(),
-            source: None,
-            extensions: None,
-        }
-    }
-}
-
-#[cfg(not(feature = "default-error-impl"))]
 impl<T: Into<String>> From<T> for Error {
     fn from(value: T) -> Self {
         Self {
